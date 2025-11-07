@@ -1,0 +1,10 @@
+{
+  "name": "user-service",
+  "type": "module",
+  "dependencies": {
+    "amqplib": "^0.10.3",
+    "dotenv": "^17.2.3",
+    "mongodb": "^6.9.0",
+    "@faker-js/faker": "^9.0.0"
+  }
+}

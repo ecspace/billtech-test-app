@@ -1,0 +1,53 @@
+version: '3.8'
+services:
+  mongo:
+    image: mongo:6
+    container_name: mongo
+    ports:
+      - '27017:27017'
+    volumes:
+      - mongo-data:/data/db
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - '5672:5672'
+      - '15672:15672'
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+
+#  orchestrator:
+#    build: ./orchestrator
+#    container_name: orchestrator
+#    ports:
+#      - "3000:3000"
+#    env_file:
+#      - .env
+#    depends_on:
+#      - rabbitmq
+#      - users-db-service
+#      - users-cache-service
+#
+#
+#  users-db-service:
+#    build: ./users-db-service
+#    container_name: users-db-service
+#    env_file:
+#      - .env
+#    depends_on:
+#      - mongo
+#      - rabbitmq
+#
+#
+#  users-cache-service:
+#    build: ./users-cache-service
+#    container_name: users-cache-service
+#    env_file:
+#      - .env
+#    depends_on:
+#      - rabbitmq
+
+volumes:
+  mongo-data:
