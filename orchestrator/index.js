@@ -12,7 +12,7 @@ const start = async () => {
   const connection = await amqp.connect(config.rabbitUrl);
 
   channel = await connection.createChannel();
-  await channel.assertExchange(config.exchange, 'topic', { durable: true });
+  await channel.assertExchange(config.exchange, 'direct', { durable: true });
   
   fastify.decorate('mqChannel', channel);
   fastify.decorate('exchange', config.exchange);

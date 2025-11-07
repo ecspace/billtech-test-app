@@ -21,7 +21,7 @@ const users = client.db('testdb').collection('users');
 // AMQP
 const connection = await amqp.connect(config.rabbitUrl);
 const channel = await connection.createChannel();
-await channel.assertExchange(EXCHANGE, 'topic', { durable: true });
+await channel.assertExchange(EXCHANGE, 'direct', { durable: true });
 const q = await channel.assertQueue('user-service-queue', { durable: true });
 
 for (const key of ROUTING_BINDINGS) {

@@ -10,7 +10,7 @@ const userByIdRouteKey = 'user.get_by_id';
 // AMQP
 const connection = await amqp.connect(config.rabbitUrl);
 const channel = await connection.createChannel();
-await channel.assertExchange(EXCHANGE, 'topic', { durable: true });
+await channel.assertExchange(EXCHANGE, 'direct', { durable: true });
 const q = await channel.assertQueue('cache-service-queue', { durable: true });
 
 await channel.bindQueue(q.queue, EXCHANGE, userByIdCacheKey);
