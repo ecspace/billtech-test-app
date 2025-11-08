@@ -5,7 +5,6 @@ export default function (fastify) {
 
   fastify.get('/users', users_schema.getUsersSchema, async (req, reply) => {
     try {
-      console.log('exchange,', exchange);
       const correlationId = crypto.randomUUID();
       const queue = await mqChannel.assertQueue('', { exclusive: true });
 
@@ -13,8 +12,7 @@ export default function (fastify) {
         mqChannel.consume(queue.queue, msg => {
           if (msg.properties.correlationId === correlationId) {
             const data = JSON.parse(msg.content.toString());
-            
-            console.log('ORCHESTRATOR users', data);
+
             resolve(reply.send(data));
           }
         }, { noAck: true });
@@ -36,16 +34,14 @@ export default function (fastify) {
       const correlationId = crypto.randomUUID();
       const queue = await mqChannel.assertQueue('', { exclusive: true });
       const id = req.params.id;
-      console.log('users by id', id);
 
       return new Promise((resolve) => {
         mqChannel.consume(queue.queue, msg => {
           if (msg.properties.correlationId === correlationId) {
             const data = JSON.parse(msg.content.toString());
-            console.log('ORCHESTRATOR users by id', id, data);
             
             if (!data) reply.code(404).send({ message: 'User not found' });
-            
+
             else resolve(reply.send(data));
           }
         }, { noAck: true });
@@ -71,8 +67,7 @@ export default function (fastify) {
         mqChannel.consume(queue.queue, msg => {
           if (msg.properties.correlationId === correlationId) {
             const data = JSON.parse(msg.content.toString());
-            
-            console.log('ORCHESTRATOR total', data);
+
             resolve(reply.send(data));
           }
         }, { noAck: true });

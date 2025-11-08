@@ -37,13 +37,11 @@ channel.consume(q.queue, async (msg) => {
       throw 'routing not found';
     }
     const body = JSON.parse(msg.content.toString());
-    console.log('Consume body', body, routingKey);
 
     let response = null;
     
     if (routingKey === userByIdRouteKey) {
       response = await users.findOne({ _id: new ObjectId(body.id) }, { projection: { password: 0 } });
-      console.log('list response', response);
     }
     
     if (routingKey === userListRouteKey) {
@@ -57,7 +55,6 @@ channel.consume(q.queue, async (msg) => {
       const data = await users.find(query).sort({ _id: 1 }) .skip((page - 1) * limit).limit(limit).project({ password: 0 }).toArray();
 
       response = { count, data };
-      console.log('getUser response', response);
     }
     
     if (routingKey === userTotalRouteKey) {
@@ -65,7 +62,6 @@ channel.consume(q.queue, async (msg) => {
         { $group: { _id: { country: '$country', city: '$city' }, usersCount: { $sum: 1 } } },
         { $project: { _id: 0, country: '$_id.country', city: '$_id.city', usersCount: 1 } }
       ]).toArray();
-      console.log('getTotals response', response);
     }
 
     if (msg.properties.replyTo) {
